@@ -1,0 +1,4 @@
+name: Starforce
+version: '${project.version}'
+main: mcstarforce01.starforce.Starforce
+api-version: 1.19

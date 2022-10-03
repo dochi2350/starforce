@@ -1,0 +1,4 @@
+name: Starforce
+version: '1.0-SNAPSHOT'
+main: mcstarforce01.starforce.Starforce
+api-version: 1.19
