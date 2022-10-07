@@ -70,7 +70,7 @@ public class OpenGUI implements Listener {
     }
 
     public void AnvilTable(Player a) {
-        this.anvil = Bukkit.createInventory(null, 9, ChatColor.GOLD + "스타포스 강화 장치");
+        this.anvil = Bukkit.createInventory(null, 9, ChatColor.BOLD + "스타포스 강화 장치");
         this.anvilList.add(this.anvil);
         this.anvilMap.put(this.anvil, null);
         ItemStack deco = new ItemStack(Material.ANVIL, 1);
@@ -94,7 +94,7 @@ public class OpenGUI implements Listener {
         this.grindMap.put(this.grind, null);
         ItemStack deco = new ItemStack(Material.ANVIL, 1);
         ItemMeta meta = deco.getItemMeta();
-        meta.setDisplayName(ChatColor.BOLD + "마법부여 강화");
+        meta.setDisplayName(ChatColor.GOLD + "마법부여 강화");
         deco.setItemMeta(meta);
         this.grind.setItem(0, deco);
         this.grind.setItem(1, deco);
@@ -262,7 +262,11 @@ public class OpenGUI implements Listener {
                     // 확률 디스플레이
                     ItemMeta meta = event.getCurrentItem().getItemMeta();
                     if (this.force >= 0) {
-                        AttributeModifier ia1, ia2, ip1, ip2, ip3, is1, is2, ih1, ih2, ic1, ic2, ic3, il1, il2, il3, ib1, ib2, ib3, ga1, ga2, gp1, gp2, gp3, gs1, gs2, gh1, gh2, gc1, gc2, gc3, gl1, gl2, gl3, gb1, gb2, gb3, da1, da2, dp1, dp2, dp3, ds1, ds2, dh1, dh2, dh3, dc1, dc2, dc3, dc4, dl1, dl2, dl3, dl4, db1, db2, db3, db4, na1, na2, np1, np2, np3, ns1, ns2, nh1, nh2, nh3, nc1, nc2, nc3, nc4, nl1, nl2, nl3, nl4, nb1, nb2, nb3, nb4, t1, t2, t3, s1, f1;
+                        AttributeModifier ia1, ia2, ip1, ip2, ip3, is1, is2, ih1, ih2, ic1, ic2, ic3, il1, il2, il3, ib1, ib2, ib3,
+                                          ga1, ga2, gp1, gp2, gp3, gs1, gs2, gh1, gh2, gc1, gc2, gc3, gl1, gl2, gl3, gb1, gb2, gb3,
+                                          da1, da2, dp1, dp2, dp3, ds1, ds2, dh1, dh2, dh3, dc1, dc2, dc3, dc4, dl1, dl2, dl3, dl4, db1, db2, db3, db4,
+                                          na1, na2, np1, np2, np3, ns1, ns2, nh1, nh2, nh3, nc1, nc2, nc3, nc4, nl1, nl2, nl3, nl4, nb1, nb2, nb3, nb4,
+                                          t1, t2, t3, s1, f1, b1, b2, b3, cb1, cb2, cb3;
                         for (int m = 0; m < this.force; m++)
                             this.forceString += "★";
                         for (int k = 0; k < 25 - this.force; k++)
@@ -363,7 +367,7 @@ public class OpenGUI implements Listener {
                                 break;
                             case GOLDEN_SWORD:
                                 gs1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 4.0D + this.force * 0.5D * 2.5D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                gs2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.4D + this.force * 0.1D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                gs2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.4D + this.force * 10.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, gs1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, gs2);
                                 break;
@@ -529,6 +533,23 @@ public class OpenGUI implements Listener {
                                 f1 = new AttributeModifier(UUID.randomUUID(), "generic.luck", (this.force * 0.5F), AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_LUCK, f1);
                                 break;
+                            case BOW:
+                                b1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 9.0D + this.force * 0.5D * 12.5D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                b2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.9D + this.force * 0.1D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                b3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.01D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
+                                meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, b1);
+                                meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, b2);
+                                meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, b3);
+                                break;
+                            case CROSSBOW:
+                                cb1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 9.0D + this.force * 0.5D * 12.5D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                cb2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.9D + this.force * 0.1D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                cb3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.01D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
+                                meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, cb1);
+                                meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, cb2);
+                                meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, cb3);
+                                break;
+
                         }
                         event.getCurrentItem().setItemMeta(meta);
                     } else {
