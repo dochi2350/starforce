@@ -147,8 +147,10 @@ public class OpenGUI implements Listener {
                 shieldId = temp;
             shieldSpell.setAmount(shieldSpell.getAmount() + 1);
         }
-        Integer[] successPercentage = {950,900,850,850,800,750,700,650,600,550,500,450,400,350,300,300,300,300,300,300,300,300,30,20,10};
-        Integer[] destroyPercentage = {0,0,0,0,0,0,0,0,0,0,0,0,6,13,14,21,21,21,28,28,70,70,194,294,396};
+//        Integer[] successPercentage = {950,900,850,850,800,750,700,650,600,550,500,450,400,350,300,300,300,300,300,300,300,300,30,20,10};
+//        Integer[] destroyPercentage = {0,0,0,0,0,0,0,0,0,0,0,0,6,13,14,21,21,21,28,28,70,70,194,294,396};
+        Integer[] successPercentage = {950,900,850,850,800,750,700,650,600,550,500,450,400,350,300,300,300,300,300,300,300,300,300,200,100};
+        Integer[] destroyPercentage = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
         switch (event.getCurrentItem().getType()) {
             case IRON_SWORD:
             case IRON_AXE:
@@ -181,15 +183,30 @@ public class OpenGUI implements Listener {
             case SHIELD:
             case TRIDENT:
             case FISHING_ROD:
+            case BOW:
+            case CROSSBOW:
                 if (!event.getSlotType().equals(InventoryType.SlotType.CONTAINER) || event.getSlot() > 8) {
                     upgradeItem.setType(event.getCurrentItem().getType());
                     upgradeItem.setData(event.getCurrentItem().getData());
                     ItemMeta meta = event.getCurrentItem().getItemMeta();
-//                    this.force = 0;
-                    for (int m = 0; m < this.force; m++)
-                        this.forceString += "★";
-                    for (int k = 0; k < 25 - this.force; k++)
-                        this.forceString += "☆";
+                    this.force = 0;
+                    if (meta.hasLore()) {
+                        String forceStringGet1 = meta.getLore().get(0);
+                        String forceStringGet2 = meta.getLore().get(1);
+                        for (int k = 0; k < forceStringGet1.length(); k++) {
+                            if (forceStringGet1.charAt(k) == '★')
+                                this.force++;
+                        }
+                        for (int k = 0; k < forceStringGet2.length(); k++) {
+                            if (forceStringGet2.charAt(k) == '★')
+                                this.force++;
+                        }
+                    } else {
+                        for (int m = 0; m < this.force; m++)
+                            this.forceString += "★";
+                        for (int k = 0; k < 25 - this.force; k++)
+                            this.forceString += "☆";
+                    }
                     meta.setLore(null);
                     // 별
                     String upperStar = String.format("%s %s %s", this.forceString.substring(0, 5), this.forceString.substring(5, 10), this.forceString.substring(10, 15));
@@ -262,7 +279,7 @@ public class OpenGUI implements Listener {
                     // 확률 디스플레이
                     ItemMeta meta = event.getCurrentItem().getItemMeta();
                     if (this.force >= 0) {
-                        AttributeModifier ia1, ia2, ip1, ip2, ip3, is1, is2, ih1, ih2, ic1, ic2, ic3, il1, il2, il3, ib1, ib2, ib3,
+                        AttributeModifier ia1, ia2, ip1, ip2, ip3, is1, is2, ih1, ih2, ic1, ic2, ic3, il1, il2, il3, ib1, ib2,
                                           ga1, ga2, gp1, gp2, gp3, gs1, gs2, gh1, gh2, gc1, gc2, gc3, gl1, gl2, gl3, gb1, gb2, gb3,
                                           da1, da2, dp1, dp2, dp3, ds1, ds2, dh1, dh2, dh3, dc1, dc2, dc3, dc4, dl1, dl2, dl3, dl4, db1, db2, db3, db4,
                                           na1, na2, np1, np2, np3, ns1, ns2, nh1, nh2, nh3, nc1, nc2, nc3, nc4, nl1, nl2, nl3, nl4, nb1, nb2, nb3, nb4,
@@ -302,249 +319,337 @@ public class OpenGUI implements Listener {
                         meta.removeAttributeModifier(EquipmentSlot.FEET);
                         switch (event.getCurrentItem().getType()) {
                             case IRON_AXE:
-                                ia1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", (9 + this.force * 2.5D), AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                ia2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -3.1D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                Double[] iron_axeAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] iron_axeAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                ia1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", iron_axeAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                ia2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", iron_axeAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, ia1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, ia2);
                                 break;
                             case IRON_PICKAXE:
-                                ip1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 4.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                ip2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.8D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                ip3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
+                                Double[] iron_pickaxeAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] iron_pickaxeAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] iron_pickaxeMS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                ip1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", iron_pickaxeAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                ip2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", iron_pickaxeAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                ip3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", iron_pickaxeMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, ip1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, ip2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, ip3);
                                 break;
                             case IRON_SWORD:
-                                is1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 6.0D + this.force * 0.5D * 2.5D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                is2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.4D + this.force * 0.1D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                Double[] iron_swordAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] iron_swordAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                is1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", iron_swordAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                is2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", iron_swordAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, is1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, is2);
                                 break;
                             case IRON_HELMET:
-                                ih1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", this.force * 0.25D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
-                                ih2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", (2 + this.force), AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
+                                Double[] iron_helmetAD = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] iron_helmetAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                ih1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", iron_helmetAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
+                                ih2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", iron_helmetAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, ih1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, ih2);
                                 break;
                             case IRON_CHESTPLATE:
-                                ic1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", this.force * 0.25D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
-                                ic2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", 6.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
-                                ic3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", this.force, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                Double[] iron_chestplateAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] iron_chestplateAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] iron_chestplateMHP = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                ic1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", iron_chestplateAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                ic2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", iron_chestplateAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                ic3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", iron_chestplateMHP[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, ic1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, ic2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, ic3);
                                 break;
                             case IRON_LEGGINGS:
-                                il1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.LEGS);
-                                il2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", 5.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
-                                il3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", this.force, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
+                                Double[] iron_leggingsAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] iron_leggingsAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] iron_leggingsMHP = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                il1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", iron_leggingsAD[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.LEGS);
+                                il2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", iron_leggingsAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
+                                il3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", iron_leggingsMHP[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, il1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, il2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, il3);
                                 break;
                             case IRON_BOOTS:
-                                ib1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
-                                ib2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", 2.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.FEET);
-                                ib3 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
+                                Double[] iron_bootsSP = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] iron_bootsAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                ib1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", iron_bootsSP[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
+                                ib2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", iron_bootsAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.FEET);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, ib1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, ib2);
-                                meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, ib3);
                                 break;
                             case GOLDEN_AXE:
-                                ga1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", (7 + this.force * 2.5D), AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                ga2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -3.1D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                Double[] golden_axeAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] golden_axeAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                ga1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", golden_axeAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                ga2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", golden_axeAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, ga1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, ga2);
                                 break;
                             case GOLDEN_PICKAXE:
-                                gp1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 2.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                gp2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.8D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                gp3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
+                                Double[] golden_pickaxeAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] golden_pickaxeAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] golden_pickaxeMS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                gp1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", golden_pickaxeAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                gp2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", golden_pickaxeAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                gp3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", golden_pickaxeMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, gp1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, gp2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, gp3);
                                 break;
                             case GOLDEN_SWORD:
-                                gs1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 4.0D + this.force * 0.5D * 2.5D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                gs2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.4D + this.force * 10.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                Double[] golden_swordAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] golden_swordAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                gs1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", golden_swordAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                gs2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", golden_swordAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, gs1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, gs2);
                                 break;
                             case GOLDEN_HELMET:
-                                gh1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", this.force * 0.25D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
-                                gh2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", (2 + this.force), AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
+                                Double[] golden_helmetAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] golden_helmetAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                gh1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", golden_helmetAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
+                                gh2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", golden_helmetAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, gh1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, gh2);
                                 break;
                             case GOLDEN_CHESTPLATE:
-                                gc1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", this.force * 0.25D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
-                                gc2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", 5.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
-                                gc3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", this.force, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                Double[] golden_chestplateAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] golden_chestplateAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] golden_chestplateMHP = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                gc1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", golden_chestplateAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                gc2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", golden_chestplateAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                gc3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", golden_chestplateMHP[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, gc1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, gc2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, gc3);
                                 break;
                             case GOLDEN_LEGGINGS:
-                                gl1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.LEGS);
-                                gl2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", 3.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
-                                gl3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", this.force, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
+                                Double[] golden_leggingsMS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] golden_leggingsAM = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] golden_leggingsMHP = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                gl1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", golden_leggingsMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.LEGS);
+                                gl2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", golden_leggingsAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
+                                gl3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", golden_leggingsMHP[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, gl1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, gl2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, gl3);
                                 break;
                             case GOLDEN_BOOTS:
-                                gb1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
-                                gb2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", 1.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.FEET);
-                                gb3 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
+                                Double[] golden_bootsMS = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] golden_bootsAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] golden_bootsAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                gb1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", golden_bootsMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
+                                gb2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", golden_bootsAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.FEET);
+                                gb3 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", golden_bootsAS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, gb1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, gb2);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, gb3);
                                 break;
                             case DIAMOND_AXE:
-                                da1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", (9 + this.force * 2.5D), AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                da2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -3.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                Double[] diamond_axeAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] diamond_axeAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                da1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", diamond_axeAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                da2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", diamond_axeAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, da1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, da2);
                                 break;
                             case DIAMOND_PICKAXE:
-                                dp1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 5.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                dp2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.8D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                dp3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
+                                Double[] diamond_pickaxeAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] diamond_pickaxeAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] diamond_pickaxeMS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                dp1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", diamond_pickaxeAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                dp2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", diamond_pickaxeAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                dp3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", diamond_pickaxeMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, dp1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, dp2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, dp3);
                                 break;
                             case DIAMOND_SWORD:
-                                ds1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 7.0D + this.force * 0.5D * 2.5D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                ds2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.4D + this.force * 0.1D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                Double[] diamond_swordAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] diamond_swordAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                ds1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", diamond_swordAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                ds2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", diamond_swordAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, ds1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, ds2);
                                 break;
                             case DIAMOND_HELMET:
-                                dh1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", this.force * 0.25D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
-                                dh2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", (3 + this.force), AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
-                                dh3 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", 2.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
+                                Double[] diamond_helmetAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] diamond_helmetAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] diamond_helmetTN = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                dh1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", diamond_helmetAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
+                                dh2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", diamond_helmetAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
+                                dh3 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", diamond_helmetTN[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, dh1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, dh2);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, dh3);
                                 break;
                             case DIAMOND_CHESTPLATE:
-                                dc1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", this.force * 0.25D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
-                                dc2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", 8.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
-                                dc3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", this.force, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
-                                dc4 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", 2.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                Double[] diamond_chestplateAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] diamond_chestplateAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] diamond_chestplateMHP = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] diamond_chestplateTN = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                dc1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", diamond_chestplateAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                dc2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", diamond_chestplateAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                dc3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", diamond_chestplateMHP[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                dc4 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", diamond_chestplateTN[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, dc1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, dc2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, dc3);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, dc4);
                                 break;
                             case DIAMOND_LEGGINGS:
-                                dl1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.LEGS);
-                                dl2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", 6.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
-                                dl3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", this.force, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
-                                dl4 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", 2.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
+                                Double[] diamond_leggingsMS = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] diamond_leggingsAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] diamond_leggingsMHP = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] diamond_leggingsTN = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                dl1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", diamond_leggingsMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.LEGS);
+                                dl2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", diamond_leggingsAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
+                                dl3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", diamond_leggingsMHP[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
+                                dl4 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", diamond_leggingsTN[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, dl1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, dl2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, dl3);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, dl4);
                                 break;
                             case DIAMOND_BOOTS:
-                                db1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
-                                db2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", 3.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.FEET);
-                                db3 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
-                                db4 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", 2.0D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
+                                Double[] diamond_bootsMS = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] diamond_bootsAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] diamond_bootsAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] diamond_bootsTN = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                db1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", diamond_bootsMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
+                                db2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", diamond_bootsAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.FEET);
+                                db3 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", diamond_bootsAS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
+                                db4 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", diamond_bootsTN[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, db1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, db2);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, db3);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, db4);
                                 break;
                             case NETHERITE_AXE:
-                                na1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", (10 + this.force * 2.5D), AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                na2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -3.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                Double[] netherite_axeAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] netherite_axeAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                na1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", netherite_axeAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                na2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", netherite_axeAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, na1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, na2);
                                 break;
                             case NETHERITE_PICKAXE:
-                                np1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 6.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                np2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.8D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                np3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
+                                Double[] netherite_pickaxeAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] netherite_pickaxeAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] netherite_pickaxeMS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                np1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", netherite_pickaxeAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                np2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", netherite_pickaxeAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                np3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", netherite_pickaxeMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, np1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, np2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, np3);
                                 break;
                             case NETHERITE_SWORD:
-                                ns1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 8.0D + this.force * 0.5D * 2.5D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                ns2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.4D + this.force * 0.1D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                Double[] netherite_swordAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] netherite_swordAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                ns1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", netherite_swordAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                ns2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", netherite_swordAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, ns1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, ns2);
                                 break;
                             case NETHERITE_HELMET:
-                                nh1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", this.force * 0.25D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
-                                nh2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", (3 + this.force), AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
-                                nh3 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", 3.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
+                                Double[] netherite_helmetAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] netherite_helmetAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] netherite_helmetTN = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                nh1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", netherite_helmetAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
+                                nh2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", netherite_helmetAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
+                                nh3 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", netherite_helmetTN[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, nh1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, nh2);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, nh3);
                                 break;
                             case NETHERITE_CHESTPLATE:
-                                nc1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", this.force * 0.25D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
-                                nc2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", 8.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
-                                nc3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", this.force, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
-                                nc4 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", 3.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                Double[] netherite_chestplateAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] netherite_chestplateAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] netherite_chestplateMHP = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] netherite_chestplateTN = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                nc1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", netherite_chestplateAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                nc2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", netherite_chestplateAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                nc3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", netherite_chestplateMHP[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
+                                nc4 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", netherite_chestplateTN[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, nc1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, nc2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, nc3);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, nc4);
                                 break;
                             case NETHERITE_LEGGINGS:
-                                nl1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.LEGS);
-                                nl2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", 6.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
-                                nl3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", this.force, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
-                                nl4 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", 3.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
+                                Double[] netherite_leggingsMS = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] netherite_leggingsAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] netherite_leggingsMHP = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] netherite_leggingsTN = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                nl1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", netherite_leggingsMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.LEGS);
+                                nl2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", netherite_leggingsAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
+                                nl3 = new AttributeModifier(UUID.randomUUID(), "generic.max_health", netherite_leggingsMHP[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
+                                nl4 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", netherite_leggingsTN[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, nl1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, nl2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, nl3);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, nl4);
                                 break;
                             case NETHERITE_BOOTS:
-                                nb1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
-                                nb2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", 3.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.FEET);
-                                nb3 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", this.force * 0.05D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
-                                nb4 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", 3.0D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.FEET);
+                                Double[] netherite_bootsMS = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] netherite_bootsAM = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] netherite_bootsAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] netherite_bootsTN = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                nb1 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", netherite_bootsMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
+                                nb2 = new AttributeModifier(UUID.randomUUID(), "generic.armor", netherite_bootsAM[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.FEET);
+                                nb3 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", netherite_bootsAS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.FEET);
+                                nb4 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", netherite_bootsTN[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.FEET);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, nb1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR, nb2);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, nb3);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, nb4);
                                 break;
                             case TRIDENT:
-                                t1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 9.0D + this.force * 0.5D * 12.5D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                t2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.9D + this.force * 0.1D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                t3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.01D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
+                                Double[] tridentAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] tridentAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] tridentMS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                t1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", tridentAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                t2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", tridentAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                t3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", tridentMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, t1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, t2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, t3);
                                 break;
                             case SHIELD:
-                                s1 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", this.force * 0.8D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.OFF_HAND);
+                                Double[] shieldTN = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                s1 = new AttributeModifier(UUID.randomUUID(), "generic.armor_toughness", shieldTN[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.OFF_HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, s1);
                                 break;
                             case FISHING_ROD:
-                                f1 = new AttributeModifier(UUID.randomUUID(), "generic.luck", (this.force * 0.5F), AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                Double[] fishing_rodLUK = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                f1 = new AttributeModifier(UUID.randomUUID(), "generic.luck", fishing_rodLUK[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_LUCK, f1);
                                 break;
                             case BOW:
-                                b1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 9.0D + this.force * 0.5D * 12.5D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                b2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.9D + this.force * 0.1D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                b3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.01D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
+                                Double[] bowAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] bowAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] bowMS = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                b1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", bowAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                b2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", bowAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                b3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", bowMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, b1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, b2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, b3);
                                 break;
                             case CROSSBOW:
-                                cb1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", 9.0D + this.force * 0.5D * 12.5D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                cb2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", -2.9D + this.force * 0.1D, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
-                                cb3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", this.force * 0.01D, AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
+                                Double[] crossbowAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] crossbowAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                Double[] crossbowMS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
+                                cb1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", crossbowAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                cb2 = new AttributeModifier(UUID.randomUUID(), "generic.attack_speed", crossbowAS[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+                                cb3 = new AttributeModifier(UUID.randomUUID(), "generic.movement_speed", crossbowMS[this.force], AttributeModifier.Operation.MULTIPLY_SCALAR_1, EquipmentSlot.HAND);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, cb1);
                                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, cb2);
                                 meta.addAttributeModifier(Attribute.GENERIC_MOVEMENT_SPEED, cb3);
