@@ -191,10 +191,16 @@ public class OpenGUI implements Listener {
                     ItemMeta meta = event.getCurrentItem().getItemMeta();
                     this.force = 0;
                     if (meta.hasLore()) {
+//                        this.forceString = meta.getLore().get(1);
+//                        Bukkit.getLogger().info(this.forceString);
+//                        for (int k = 0; k < this.forceString.length(); k++) {
+//                            if (this.forceString.charAt(k) == '★')
+//                                this.force++;
+//                        }
                         String forceStringGet1 = meta.getLore().get(0);
                         String forceStringGet2 = meta.getLore().get(1);
-                        for (int k = 0; k < forceStringGet1.length(); k++) {
-                            if (forceStringGet1.charAt(k) == '★')
+                        for (int m = 0; m < forceStringGet1.length(); m++) {
+                            if (forceStringGet1.charAt(m) == '★')
                                 this.force++;
                         }
                         for (int k = 0; k < forceStringGet2.length(); k++) {
