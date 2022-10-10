@@ -190,13 +190,7 @@ public class OpenGUI implements Listener {
                     upgradeItem.setData(event.getCurrentItem().getData());
                     ItemMeta meta = event.getCurrentItem().getItemMeta();
                     this.force = 0;
-                    if (meta.hasLore()) {
-//                        this.forceString = meta.getLore().get(1);
-//                        Bukkit.getLogger().info(this.forceString);
-//                        for (int k = 0; k < this.forceString.length(); k++) {
-//                            if (this.forceString.charAt(k) == '★')
-//                                this.force++;
-//                        }
+                    try {
                         String forceStringGet1 = meta.getLore().get(0);
                         String forceStringGet2 = meta.getLore().get(1);
                         for (int m = 0; m < forceStringGet1.length(); m++) {
@@ -207,7 +201,9 @@ public class OpenGUI implements Listener {
                             if (forceStringGet2.charAt(k) == '★')
                                 this.force++;
                         }
-                    } else {
+                    } catch (Exception e){
+                        this.force = 0;
+                    } finally {
                         for (int m = 0; m < this.force; m++)
                             this.forceString += "★";
                         for (int k = 0; k < 25 - this.force; k++)
