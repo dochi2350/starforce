@@ -190,25 +190,26 @@ public class OpenGUI implements Listener {
                     upgradeItem.setData(event.getCurrentItem().getData());
                     ItemMeta meta = event.getCurrentItem().getItemMeta();
                     this.force = 0;
-                    try {
-                        String forceStringGet1 = meta.getLore().get(0);
-                        String forceStringGet2 = meta.getLore().get(1);
-                        for (int m = 0; m < forceStringGet1.length(); m++) {
-                            if (forceStringGet1.charAt(m) == '★')
-                                this.force++;
+                    if (meta.hasLore()) {
+                        try {
+                            String forceStringGet1 = meta.getLore().get(0);
+                            String forceStringGet2 = meta.getLore().get(1);
+                            for (int m = 0; m < forceStringGet1.length(); m++) {
+                                if (forceStringGet1.charAt(m) == '★')
+                                    this.force++;
+                            }
+                            for (int k = 0; k < forceStringGet2.length(); k++) {
+                                if (forceStringGet2.charAt(k) == '★')
+                                    this.force++;
+                            }
+                        } catch (Exception e) {
+                            this.force = 0;
                         }
-                        for (int k = 0; k < forceStringGet2.length(); k++) {
-                            if (forceStringGet2.charAt(k) == '★')
-                                this.force++;
-                        }
-                    } catch (Exception e){
-                        this.force = 0;
-                    } finally {
-                        for (int m = 0; m < this.force; m++)
-                            this.forceString += "★";
-                        for (int k = 0; k < 25 - this.force; k++)
-                            this.forceString += "☆";
                     }
+                    for (int m = 0; m < this.force; m++)
+                        this.forceString += "★";
+                    for (int k = 0; k < 25 - this.force; k++)
+                        this.forceString += "☆";
                     meta.setLore(null);
                     // 별
                     String upperStar = String.format("%s %s %s", this.forceString.substring(0, 5), this.forceString.substring(5, 10), this.forceString.substring(10, 15));
