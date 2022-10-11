@@ -147,10 +147,10 @@ public class OpenGUI implements Listener {
                 shieldId = temp;
             shieldSpell.setAmount(shieldSpell.getAmount() + 1);
         }
-//        Integer[] successPercentage = {950,900,850,850,800,750,700,650,600,550,500,450,400,350,300,300,300,300,300,300,300,300,30,20,10};
-//        Integer[] destroyPercentage = {0,0,0,0,0,0,0,0,0,0,0,0,6,13,14,21,21,21,28,28,70,70,194,294,396};
-        Integer[] successPercentage = {950,900,850,850,800,750,700,650,600,550,500,450,400,350,300,300,300,300,300,300,300,300,300,200,100};
-        Integer[] destroyPercentage = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        Integer[] successPercentage = {950,900,850,850,800,750,700,650,600,550,500,450,400,350,300,300,300,300,300,300,300,300,30,20,10};
+        Integer[] destroyPercentage = {0,0,0,0,0,0,0,0,0,0,0,0,6,13,14,21,21,21,28,28,70,70,194,294,396};
+//        Integer[] successPercentage = {950,900,850,850,800,750,700,650,600,550,500,450,400,350,300,300,300,300,300,300,300,300,300,200,100};
+//        Integer[] destroyPercentage = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
         switch (event.getCurrentItem().getType()) {
             case IRON_SWORD:
             case IRON_AXE:
