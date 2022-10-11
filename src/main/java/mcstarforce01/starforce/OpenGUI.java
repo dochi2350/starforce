@@ -283,10 +283,10 @@ public class OpenGUI implements Listener {
                     ItemMeta meta = event.getCurrentItem().getItemMeta();
                     if (this.force >= 0) {
                         AttributeModifier ia1, ia2, ip1, ip2, ip3, is1, is2, ih1, ih2, ic1, ic2, ic3, il1, il2, il3, ib1, ib2,
-                                          ga1, ga2, gp1, gp2, gp3, gs1, gs2, gh1, gh2, gc1, gc2, gc3, gl1, gl2, gl3, gb1, gb2, gb3,
-                                          da1, da2, dp1, dp2, dp3, ds1, ds2, dh1, dh2, dh3, dc1, dc2, dc3, dc4, dl1, dl2, dl3, dl4, db1, db2, db3, db4,
-                                          na1, na2, np1, np2, np3, ns1, ns2, nh1, nh2, nh3, nc1, nc2, nc3, nc4, nl1, nl2, nl3, nl4, nb1, nb2, nb3, nb4,
-                                          t1, t2, t3, s1, f1, b1, b2, b3, cb1, cb2, cb3;
+                                ga1, ga2, gp1, gp2, gp3, gs1, gs2, gh1, gh2, gc1, gc2, gc3, gl1, gl2, gl3, gb1, gb2, gb3,
+                                da1, da2, dp1, dp2, dp3, ds1, ds2, dh1, dh2, dh3, dc1, dc2, dc3, dc4, dl1, dl2, dl3, dl4, db1, db2, db3, db4,
+                                na1, na2, np1, np2, np3, ns1, ns2, nh1, nh2, nh3, nc1, nc2, nc3, nc4, nl1, nl2, nl3, nl4, nb1, nb2, nb3, nb4,
+                                t1, t2, t3, s1, f1, b1, b2, b3, cb1, cb2, cb3;
                         for (int m = 0; m < this.force; m++)
                             this.forceString += "★";
                         for (int k = 0; k < 25 - this.force; k++)
@@ -615,7 +615,7 @@ public class OpenGUI implements Listener {
                                 meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS, nb4);
                                 break;
                             case TRIDENT:
-                                Double[] tridentAD = {9.0D,9.2D,9.4D,9.6D,9.8D,10.0D,10.3D,10.6D,10.9D,11.2D,11.5D,11.8D,12.1D,12.4D,12.7D,13.0D,13.4D,13.8D,14.2D,14.8D,15.0D,15.5D,16.0D,16.5D,17.0D,18.0D};
+                                Double[] tridentAD = {9.0D,9.5D,10.0D,10.5D,11.0D,11.5D,12.0D,12.5D,13.0D,13.5D,14.0D,15.0D,16.0D,17.0D,18.0D,19.0D,21.0D,23.0D,25.0D,27.0D,29.0D,34.0D,37.0D,41.0D,45.0D,49.0D};
                                 Double[] tridentAS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
                                 Double[] tridentMS = {0.90D,0.92D,0.94D,0.96D,0.98D,1.00D,1.03D,1.06D,1.09D,1.12D,1.15D,1.18D,1.21D,1.24D,1.27D,1.30D,1.35D,1.40D,1.45D,1.50D,1.55D,1.60D,1.70D,1.80D,1.90D,2.00D};
                                 t1 = new AttributeModifier(UUID.randomUUID(), "generic.attack_damage", tridentAD[this.force], AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
